@@ -11,9 +11,9 @@
 
 def index():
     """
-    This index appears when you go to bboard/default/index . 
+    This index appears when you go to bboard/default/index .
     """
-    # We want to generate an index of the posts. 
+    # We want to generate an index of the posts.
     posts = db().select(db.bboard.ALL)
     return dict(posts=posts)
 
@@ -60,31 +60,31 @@ def delete():
         redirect(URL('default', 'index'))
     db(db.bboard.id == p.id).delete()
     redirect(URL('default', 'index'))
-    
+
 def index2():
     """Better index."""
-    # Let's get all data. 
+    # Let's get all data.
     q = db.bboard
-    
+
     def generate_del_button(row):
         # If the record is ours, we can delete it.
         b = ''
         if auth.user_id == row.user_id:
             b = A('Delete', _class='btn', _href=URL('default', 'delete', args=[row.id]))
         return b
-    
+
     def generate_edit_button(row):
         # If the record is ours, we can delete it.
         b = ''
         if auth.user_id == row.user_id:
             b = A('Edit', _class='btn', _href=URL('default', 'edit', args=[row.id]))
         return b
-    
+
     def shorten_post(row):
         return row.bbmessage[:10] + '...'
-    
+
     # Creates extra buttons.
-    
+
     links = [
         dict(header='', body = generate_del_button),
         dict(header='', body = generate_edit_button),
@@ -94,14 +94,14 @@ def index2():
         # We are in the main index.
         links.append(dict(header='Post', body = shorten_post))
         db.bboard.bbmessage.readable = False
-    
+
     form = SQLFORM.grid(q,
-        fields=[db.bboard.user_id, db.bboard.date_posted, 
-                db.bboard.category, db.bboard.title, 
+        fields=[db.bboard.user_id, db.bboard.date_posted,
+                db.bboard.category, db.bboard.title,
                 db.bboard.bbmessage],
         editable=False, deletable=False,
         links=links,
-        paginate=2,
+        paginate=10,
         )
     return dict(form=form)
 
@@ -142,7 +142,7 @@ def call():
     return service()
 
 
-@auth.requires_login() 
+@auth.requires_login()
 def api():
     """
     this is example of API with access control
