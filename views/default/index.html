@@ -1,0 +1,26 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,('message' in globals())}}
+{{extend 'layout.html'}}
+
+<h1>Welcome to the crazy bboard</h1>
+
+<h2>Posts:</h2>
+
+{{if len(posts) > 0:}}
+
+<ul>
+{{for p in posts:}}
+<li>Post by {{=p.name}}, posted on {{=p.date_posted}}
+({{=A('Read', _href=URL('default', 'view', args=[p.id]))}})
+({{=A('Edit', _href=URL('default', 'edit', args=[p.id]))}})
+({{=A('Delete', _href=URL('default', 'delete', args=[p.id], user_signature=True))}})
+</li>
+{{pass}}
+</ul>
+
+{{else:}}
+There are no posts.
+{{pass}}
+
+<p>
+{{=A('Add a post', _class='btn', _href=URL('default', 'add'))}}
+</p>
